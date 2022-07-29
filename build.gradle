@@ -1,0 +1,54 @@
+/*
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+plugins {
+    id 'application'
+    id 'groovy'
+    id 'org.graalvm.buildtools.native'
+}
+
+application {
+    mainClass = 'H2Demo'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+	implementation 'com.h2database:h2:2.1.210'
+	implementation 'org.apache.groovy:groovy:4.0.4'
+	implementation 'org.apache.groovy:groovy-sql:4.0.4'
+}
+
+graalvmNative {
+    agent {
+        defaultMode = 'standard'
+    }
+    metadataRepository {
+        enabled = true
+    }
+    binaries {
+        main {
+            buildArgs.addAll(
+//                    '-H:IncludeSBOM=cyclonedx',
+                    '--report-unsupported-elements-at-runtime',
+                    '--initialize-at-run-time=groovy.grape.GrapeIvy,org.h2.store.fs.niomem.FileNioMemData',
+                    '--initialize-at-build-time',
+                    '--no-fallback',
+            )
+        }
+    }
+}
