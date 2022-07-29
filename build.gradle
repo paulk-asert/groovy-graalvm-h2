@@ -33,6 +33,14 @@ dependencies {
 	implementation 'org.apache.groovy:groovy-sql:4.0.4'
 }
 
+// if you want compile and run to use GraalVM automatically
+//java {
+//    toolchain {
+//        languageVersion = JavaLanguageVersion.of(17)
+//        vendor = JvmVendorSpec.GRAAL_VM
+//    }
+//}
+
 graalvmNative {
     agent {
         defaultMode = 'standard'
@@ -42,8 +50,13 @@ graalvmNative {
     }
     binaries {
         main {
+// if you want nativeCompile and nativeRun to use GraalVM, doesn't seem to find gu if downloaded via sdkman
+// use "gu install native-image" from command-line first and then it should find things after that
+//            javaLauncher = javaToolchains.launcherFor {
+//                languageVersion = JavaLanguageVersion.of(17)
+//                vendor = JvmVendorSpec.GRAAL_VM
+//            }
             buildArgs.addAll(
-//                    '-H:IncludeSBOM=cyclonedx',
                     '--report-unsupported-elements-at-runtime',
                     '--initialize-at-run-time=groovy.grape.GrapeIvy,org.h2.store.fs.niomem.FileNioMemData',
                     '--initialize-at-build-time',

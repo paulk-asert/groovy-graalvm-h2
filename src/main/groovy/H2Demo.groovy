@@ -19,7 +19,8 @@ import groovy.transform.CompileStatic
 @CompileStatic
 class H2Demo {
     static void main(args) {
-        Sql.withInstance('jdbc:h2:./data.test') { sql ->
+        println "${System.getProperty('java.vm.name')}, ${System.getProperty('java.vm.version')}, ${System.getProperty('java.vm.vendor')}"
+        Sql.withInstance('jdbc:h2:./data/test') { sql ->
             sql.execute 'DROP TABLE IF EXISTS customers'
             sql.execute 'CREATE TABLE customers(id INTEGER AUTO_INCREMENT, name VARCHAR)'
             for (cust in ['Lord Archimonde', 'Arthur', 'Gilbert', 'Grug']) {
